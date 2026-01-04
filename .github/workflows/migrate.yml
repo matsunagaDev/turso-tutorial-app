@@ -1,0 +1,22 @@
+name: Apply schema migrations
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  apply_migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install dependencies & tooling
+        run: |
+          npm install -g pnpm
+          pnpm install
+      - name: Apply migrations
+        run: pnpm drizzle:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
